@@ -5,12 +5,12 @@ import cartopy.crs as ccrs
 import numpy as np
 from iris.coord_categorisation import add_month, add_season
 
-def bias_plots(data,var,mask,keys,vmin,vmax,vdiff,cmap1,cmap2,units,offset=0):
+def bias_plots(data,var,mask,keys,vmin,vmax,vdiff,cmap1,cmap2,units,offset=0,Constraints=None):
   n = len(keys)
   for i,trial1 in enumerate(keys):
     for j,trial2 in enumerate(keys):
       if i==j:
-          cube = data[trial1][var].collapsed('time',iris.analysis.MEAN)
+          cube = data[trial1][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
           cube.convert_units(units)
           cube.data = np.ma.masked_array(cube.data,mask)
           ax=plt.subplot(n,n,n*i+j+1,projection=ccrs.PlateCarree(offset))
@@ -19,10 +19,10 @@ def bias_plots(data,var,mask,keys,vmin,vmax,vdiff,cmap1,cmap2,units,offset=0):
           ax.coastlines(zorder=6)
           plt.title(trial1)
       elif i<j:
-          cube1 = data[trial1][var].collapsed('time',iris.analysis.MEAN)
+          cube1 = data[trial1][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
           cube1.convert_units(units)
           cube1.data = np.ma.masked_array(cube1.data,mask)
-          cube2 = data[trial2][var].collapsed('time',iris.analysis.MEAN)
+          cube2 = data[trial2][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
           cube2.convert_units(units)
           cube2.data = np.ma.masked_array(cube2.data,mask)
           rmse = np.sqrt(((cube1 - cube2)**2).collapsed(['latitude','longitude'],iris.analysis.MEAN).data)
