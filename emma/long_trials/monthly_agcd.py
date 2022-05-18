@@ -37,7 +37,7 @@ for trial in  ["cg282_ACCESS-CM2_historical_1979_r4p","cg282_ACCESS-CM2_ssp370_2
   for var in ['prcp','Tmax','Tmin']:
       data[trial][var] =tmp.extract_cube(var.lower())
 
-topo=iris.load_cube("../trials/orog.nc",cx&cy)
+topo=iris.load_cube("/home/548/eh6215/python/trials/orog.nc",cx&cy)
 lapse = iris.coords.AuxCoord(-6,units="K/km")
 
 keys = {'historical':"CMIP_hist_long",'ssp370':"CMIP_ssp370"}
