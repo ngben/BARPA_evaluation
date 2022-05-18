@@ -53,18 +53,20 @@ def rainfall_onset(model, years, loader, file_template, startmon = 9, mons = 7, 
 def main():
   cx = iris.Constraint(longitude=lambda x: 130<=x<=155)
   cy = iris.Constraint(latitude =lambda y: -45<=y<=-10)
-  datapath = "/g/data/tp28/BARPA/trials/{domain}/{gdd}/{model}/{scenario}/{realisation}/pp_unified/daily/{var}/0p11deg/{year}/"
-  filename = "{var}_{domain}_{model}_{scenario}_{realisation}_BARPA_daily_{year:04d}{month:02d}0100-{year1:04d}{month1:02d}0100.nc"
+  datapath = "/g/data/tp28/BARPA/trials/{domain}/{gdd}/{model}/{scenario}/{realisation}/pp_unified/daily/{var}/0p04deg/{year}/"
+  filename = "{var}_{domain}_{model}_{scenario}_{realisation}_BARPAC_daily_{year:04d}{month:02d}0100-{year1:04d}{month1:02d}0100.nc"
   outdir = "/scratch/tp28/eh6215/esci/"
+  era_onset = rainfall_onset('erai',range(1990,2005),load_esci_daily, datapath+filename,constraints=cx&cy,domain="BARPAC-T_km4p4",startmon=10,mons=6)
+  iris.save(era_onset,outdir+"rainfall_onset_erai-C.nc")
 #  era_onset = rainfall_onset('erai',range(1990,2005),load_esci_daily, datapath+filename,constraints=cx&cy)
 #  iris.save(era_onset,outdir+"rainfall_onset_erai.nc")
 #  access_onset = rainfall_onset('ACCESS1-0',range(1990,2005),load_esci_daily,datapath+filename,constraints=cx&cy)
 #  iris.save(access_onset,outdir+"rainfall_onset_ACCESS1-0.nc")
-  datapath = "/g/data/tp28/Climate_Hazards/QME/BARPA/BARPA_{model}_bc/{scenario}/pr/"
-  filename = "pr{year}.nc"
-  access_onset = rainfall_onset('ACCESS1-0',range(1990,2005),load_esci_daily,datapath+filename,constraints=cx&cy,scenario='rcp85',landmask=False)
-  iris.save(access_onset,outdir+"rainfall_onset_ACCESS1-0_QME.nc")
-  import pdb;pdb.set_trace()
+#  datapath = "/g/data/tp28/Climate_Hazards/QME/BARPA/BARPA_{model}_bc/{scenario}/pr/"
+#  filename = "pr{year}.nc"
+#  access_onset = rainfall_onset('ACCESS1-0',range(1990,2005),load_esci_daily,datapath+filename,constraints=cx&cy,scenario='rcp85',landmask=False)
+#  iris.save(access_onset,outdir+"rainfall_onset_ACCESS1-0_QME.nc")
+#  import pdb;pdb.set_trace()
 
 
 

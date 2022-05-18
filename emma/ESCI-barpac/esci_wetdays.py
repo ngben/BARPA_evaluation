@@ -37,6 +37,7 @@ def wetdays(year,domain,agcd=False):
       else:
         try:
           data = load_barpa_esci(year,month, domain, "pr",cx&cy)
+          import pdb;pdb.set_trace()
         except OSError:
           continue
       data = regrid(data,template)
@@ -47,8 +48,8 @@ def wetdays(year,domain,agcd=False):
     out = out.merge_cube()
     return out
 
-for year in range(1990,2016)[:]:
-  for domain in ['agcd']:# ["BARPA-EASTAUS_12km","BARPAC-T_km4p4","BARPAC-M_km2p2"]:
+for year in range(1991,1992)[:]:
+  for domain in ['BARPAC-T_km4p4']:# ["BARPA-EASTAUS_12km","BARPAC-T_km4p4","BARPAC-M_km2p2"]:
      print(domain)
      out = wetdays(year,domain)
      out.rename(domain+"_wet_days")

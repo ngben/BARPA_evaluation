@@ -10,16 +10,16 @@ cy = iris.Constraint(latitude =lambda y: -10.5>=y>=-44)
 lsm = iris.load_cube("/home/548/eh6215/lsm.nc","land_binary_mask").extract(cx&cy)[:-1]
 #lsm.data  = np.m.masked_array(np.ones(lsm.shape),mask=1-lsm.data)
 data = {}
-ct = iris.Constraint(time=lambda t:t.point.month in [12,1,2] and t.point.year >= 1991 and t.point.year <2015)
+ct = iris.Constraint(time=lambda t:t.point.month in [1] and t.point.year >= 1991 and t.point.year <2015)
 for domain in ['agcd',"BARPA-EASTAUS_12km","BARPAC-T_km4p4","BARPAC-M_km2p2"]:
     data[domain] = {}
-    data[domain]['wet days']= iris.load_cube("/short/tp28/eh6215/ESCI/daily_pr/wetdays_%s.nc"%domain).extract(cx&cy&ct)
+    data[domain]['wet days']= iris.load_cube("/scratch/tp28/eh6215/ESCI/daily_pr/wetdays_%s.nc"%domain).extract(cx&cy&ct)
     data[domain]['wet days'].rename('wet days')
 
 cy2 = iris.Constraint(latitude=lambda y: y>-30)
 cy3 = iris.Constraint(latitude=lambda y: y<=-30)
 
-tmp = iris.cube.CubeList([2*data["BARPAC-T_km4p4"]['wet days'].extract(cy2),1*data['BARPAC-M_km2p2']['wet days'].extract(cy3)])
+tmp = iris.cube.CubeList([data["BARPAC-T_km4p4"]['wet days'].extract(cy2),1*data['BARPAC-M_km2p2']['wet days'].extract(cy3)])
 iris.util.equalise_attributes(tmp)
 tmp=tmp.concatenate_cube()
 data['BARPAC']={}
