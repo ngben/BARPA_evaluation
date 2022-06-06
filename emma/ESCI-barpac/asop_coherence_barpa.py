@@ -88,7 +88,7 @@ def get_dictionary(key):
         asop_dict['box_size']     = 100
         asop_dict['color']        = 'red'
         asop_dict['region_size']  = 13
-        asop_dict['lag_length']   = 1  
+        asop_dict['lag_length']   = 2 
         asop_dict['grid_type']    = 'native'
         asop_dict['time_type']    = '1day'
         asop_dict['grid_desc']    = 'native'
@@ -101,8 +101,28 @@ def get_dictionary(key):
         asop_dict['dx']           = 12
         asop_dict['dy']           = 12
         asop_dict['constraint']   = 'DAILY INTEGRATED PRECIPITATION IN MM DAY-1'
-        asop_dict['scale_factor'] = 1.0
+        asop_dict['scale_factor'] = 1
         asop_dict['legend_name']  = 'BARPAC-T'
+        asop_dict['region']       = [-30,-10,140,160]
+        asop_dict['box_size']     = 100
+        asop_dict['color']        = 'blue'
+        asop_dict['region_size']  = 13
+        asop_dict['lag_length']   = 2
+        asop_dict['grid_type']    = 'native'
+        asop_dict['time_type']    = 'daily'
+        asop_dict['grid_desc']    = 'native'
+        asop_dict['time_desc']    = 'daily'
+        asop_dict['autocorr_length'] = 60*60*24
+
+    elif key == 'agcd':
+        asop_dict['infile']       = '/g/data/zv2/agcd/v1/precip/total/r005/01day/agcd_v1_precip_total_r005_daily_{year}.nc'
+        asop_dict['name']         = 'BARPAC-T'
+        asop_dict['dt']           = 86400
+        asop_dict['dx']           = 5
+        asop_dict['dy']           = 5
+        asop_dict['constraint']   = 'lwe_thickness_of_precipitation_amount'
+        asop_dict['scale_factor'] = 1
+        asop_dict['legend_name']  = 'agcd'
         asop_dict['region']       = [-30,-10,140,160]
         asop_dict['box_size']     = 100
         asop_dict['color']        = 'blue'
@@ -113,6 +133,7 @@ def get_dictionary(key):
         asop_dict['grid_desc']    = 'native'
         asop_dict['time_desc']    = 'daily'
         asop_dict['autocorr_length'] = 60*60*24
+
 
     return(asop_dict)
 
@@ -137,23 +158,26 @@ def calc(dataset,yearmons):
 
         # Compute 1D and 2D histograms
         oned_hist, twod_hist = asop.compute_histogram(precip,bins)
+        asop.plot_histogram(oned_hist,twod_hist,asop_dict,bins,ext='.png')
 
         # Compute correlations as a function of native gridpoints, by dividing
         # analysis region into sub-regions (boxes of length region_size).  Also
         # computes lag correlations to a maximum lag of lag_length.
         corr_map,lag_vs_distance,autocorr,npts_map,npts = asop.compute_equalgrid_corr(precip,asop_dict)
+        asop.plot_equalgrid_corr(corr_map,lag_vs_distance,autocorr,npts,asop_dict,colorbar=False,ext='.png')
+ 
 
         # Compute correlations as a function of physical distance, by dividing
         # analysis region into sub-regions (boxes of length box_size).
-        distance_correlations,distance_ranges,distance_max = asop.compute_equalarea_corr(precip,asop_dict)
+        #distance_correlations,distance_ranges,distance_max = asop.compute_equalarea_corr(precip,asop_dict)
     
         # Compute lagged autocorrelations over all points
-        time_correlations,time_max = asop.compute_autocorr(precip,asop_dict)
+        #time_correlations,time_max = asop.compute_autocorr(precip,asop_dict)
 
         # Compute spatial and temporal coherence metrics, based on quartiles (4 divisions)
-        space_inter, time_inter = asop.compute_spacetime_summary(precip,4)
+        #space_inter, time_inter = asop.compute_spacetime_summary(precip,4)
 
-        pickle.dump((oned_hist, twod_hist, corr_map, lag_vs_distance, autocorr, npts_map, npts, distance_correlations,distance_ranges,distance_max,time_correlations,time_max,space_inter, time_inter),open("/scratch/tp28/eh6215/asop/asop_coherence_%s_%d.pickle"%(dataset,yearmons[0][0]),'wb'))
+        #pickle.dump((oned_hist, twod_hist, corr_map, lag_vs_distance, autocorr, npts_map, npts, time_correlations,time_max,space_inter, time_inter),open("/scratch/tp28/eh6215/asop/asop_coherence_%s_%d.pickle"%(dataset,yearmons[0][0]),'wb'))
 
 
 def plot(datasets,years):
@@ -192,10 +216,10 @@ def plot(datasets,years):
     asop.plot_autocorr(all_time_correlations,all_time_max,dt=all_dt,colors=all_colors,legend_names=all_legend_names,set_desc='satobs',ext='.png')
 
 
-for year in range(1991,2015):
+for year in range(2000,2001):
     yearmons = [(year,12),(year+1,1),(year+1,2)]
     #yearmons = [(year,11),(year,12),(year+1,1),(year+1,2),(year+1,3),(year+1,4)]
-    for dataset in ["BARPAR","BARPAC-T"]:
+    for dataset in ["BARPAR","BARPAC-T",'agcd']:
         calc(dataset,yearmons)
 
 
