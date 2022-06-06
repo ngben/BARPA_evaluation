@@ -9,10 +9,7 @@ def bias_plots(data,var,mask,keys,vmin,vmax,vdiff,cmap1,cmap2,units,offset=0,Con
   n = len(keys)
   means = {}
   for trial in keys:
-    if type(data[trial]) is dict:
-        means[trial] = data[trial][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
-    else:
-        means[trial] =data[trial].extract(Constraints).collapsed('time',iris.analysis.MEAN)
+    means[trial] = data[trial][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
   for i,trial1 in enumerate(keys):
     for j,trial2 in enumerate(keys):
       if i==j:
