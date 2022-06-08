@@ -3,8 +3,8 @@ import numpy as np
 import datetime as dt
 import os
 alpha_w = iris.coords.AuxCoord(1/1000.,units='m**3*kg**-1')
-cmip_info = {"ACCESS-CM2":("CSIRO-ARCCSS","r4i1p1f1")}
-def load_cmip(scenario,model,stream,var,t_s,t_e,Constraints,template=None,lapse=None,regrid_method=iris.analysis.Linear()):
+cmip_info = {"ACCESS-CM2":("CSIRO-ARCCSS","r4i1p1f1"),"ACCESS-ESM1-5":('CSIRO','r6i1p1f1'),'NorESM2-MM':('NCC','r1i1p1f1')}
+def load_cmip(scenario,model,stream,var,t_s,t_e,Constraints,template=None,lapse=None,regrid_method=iris.analysis.Linear(),callback=None):
     group,rev  = cmip_info[model]
     if scenario == 'historical':
         mip = "CMIP"
@@ -13,6 +13,9 @@ def load_cmip(scenario,model,stream,var,t_s,t_e,Constraints,template=None,lapse=
     path = "/g/data/r87/DRSv3/CMIP6/{mip}/{group}/{model}/{scenario}/{rev}/{stream}/{var}/gn/latest/".format(mip=mip,scenario=scenario,rev=rev,stream=stream,var=var,group=group,model=model)
     filepart = "{var}_{stream}_{model}_{scenario}_{rev}_gn".format(mip=mip,scenario=scenario,rev=rev,stream=stream,var=var,group=group,model=model)
     files = [f for f in os.listdir(path) if filepart in f]
+    if len(files)==0:
+        path = path.replace('latest','*')
+        files = [f for f in os.listdir(path) if filepart in f]
     starts = [f.split("_")[-1].split("-")[0] for f in files]
     ends = [f.split("_")[-1].split("-")[1] for f in files]
     starts = [dt.datetime(int(x[:4]),int(x[4:6]),1) for x in starts]
@@ -25,7 +28,7 @@ def load_cmip(scenario,model,stream,var,t_s,t_e,Constraints,template=None,lapse=
         data.coord('latitude').coord_system = template.coord('latitude').coord_system
         data = data.regrid(template,regrid_method)
         if lapse is not None:
-            topo_CMIP = iris.load_cube("/g/data/r87/DRSv3/CMIP6/{mip}/{group}/{model}/{scenario}/{rev}/fx/orog/gn/latest/orog_fx_{model}_{scenario}_{rev}_gn.nc".format(mip=mip,scenario=scenario,rev=rev,stream=stream,var=var,group=group,model=model),Constraints)
+            topo_CMIP = iris.load_cube("/g/data/r87/DRSv3/CMIP6/{mip}/{group}/{model}/{scenario}/{rev}/fx/orog/gn/latest/orog_fx_{model}_{scenario}_{rev}_gn.nc".format(mip=mip,scenario=scenario,rev=rev,stream=stream,var=var,group=group,model=model),Constraints,callback)
             topo_CMIP.coord('longitude').coord_system = template.coord('longitude').coord_system
             topo_CMIP.coord('latitude').coord_system = template.coord('latitude').coord_system
             topo_CMIP = topo_CMIP.regrid(template,regrid_method)
