@@ -5,36 +5,44 @@ import cartopy.crs as ccrs
 import numpy as np
 from iris.coord_categorisation import add_month, add_season
 
-def bias_plots(data,var,mask,keys,vmin,vmax,vdiff,cmap1,cmap2,units,offset=0,Constraints=None):
-  n = len(keys)
-  means = {}
-  for trial in keys:
-    means[trial] = data[trial][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
-  for i,trial1 in enumerate(keys):
-    for j,trial2 in enumerate(keys):
-      if i==j:
-          cube = means[trial1]
-          cube.convert_units(units)
-          cube.data = np.ma.masked_array(cube.data,mask)
-          ax=plt.subplot(n,n,n*i+j+1,projection=ccrs.PlateCarree(offset))
-          iplt.pcolormesh(cube,vmin=vmin,vmax=vmax,cmap=cmap1)
-          plt.colorbar()
-          ax.coastlines(zorder=6)
-          plt.title(trial1)
-      elif i<j:
-          cube1 = means[trial1]
-          cube1.convert_units(units)
-          cube1.data = np.ma.masked_array(cube1.data,mask)
-          cube2 = means[trial2]
-          cube2.convert_units(units)
-          cube2.data = np.ma.masked_array(cube2.data,mask)
-          rmse = np.sqrt(((cube1 - cube2)**2).collapsed(['latitude','longitude'],iris.analysis.MEAN).data)
-          ax=plt.subplot(n,n,n*i+j+1,projection=ccrs.PlateCarree())
-          iplt.pcolormesh(cube1-cube2,vmin=-vdiff,vmax=vdiff,cmap=cmap2)
-          plt.title("%s - %s (%.2f)"%(trial1,trial2,rmse))
-          ax.coastlines(zorder=6)
-          plt.colorbar()
-  plt.suptitle(var)
+def bias_plots(data,var,mask,keys,vmin,vmax,vdiff,cmap1,cmap2,units,offset=0,Constraints=None,lognorm=False):
+    if lognorm:
+        from matplotlib.colors import LogNorm
+    n = len(keys)
+    means = {}
+    for trial in keys:
+        if type(data[trial]) is dict:
+            means[trial] = data[trial][var].extract(Constraints).collapsed('time',iris.analysis.MEAN)
+        else:
+            means[trial] =data[trial].extract(Constraints).collapsed('time',iris.analysis.MEAN)
+    for i,trial1 in enumerate(keys):
+        for j,trial2 in enumerate(keys):
+            if i==j:
+                cube = means[trial1]
+                cube.convert_units(units)
+                cube.data = np.ma.masked_array(cube.data,mask)
+                ax=plt.subplot(n,n,n*i+j+1,projection=ccrs.PlateCarree(offset))
+                if lognorm:
+                    iplt.pcolormesh(cube,vmin=vmin,vmax=vmax,cmap=cmap1,norm=LogNorm())
+                else:
+                    iplt.pcolormesh(cube,vmin=vmin,vmax=vmax,cmap=cmap1)
+                plt.colorbar()
+                ax.coastlines(zorder=6)
+                plt.title(trial1)
+            elif i<j:
+                cube1 = means[trial1]
+                cube1.convert_units(units)
+                cube1.data = np.ma.masked_array(cube1.data,mask)
+                cube2 = means[trial2]
+                cube2.convert_units(units)
+                cube2.data = np.ma.masked_array(cube2.data,mask)
+                rmse = np.sqrt(((cube1 - cube2)**2).collapsed(['latitude','longitude'],iris.analysis.MEAN).data)
+                ax=plt.subplot(n,n,n*i+j+1,projection=ccrs.PlateCarree())
+                iplt.pcolormesh(cube1-cube2,vmin=-vdiff,vmax=vdiff,cmap=cmap2)
+                plt.title("%s - %s (%.2f)"%(trial1,trial2,rmse))
+                ax.coastlines(zorder=6)
+                plt.colorbar()
+    plt.suptitle(var)
 
 def ts_bias_rmse_plots(data,plottype,var,mask,keys,ref_key,units,Constraint=None):
   assert plottype in ['bias','rmse']
