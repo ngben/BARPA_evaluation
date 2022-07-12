@@ -1,0 +1,51 @@
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+Traceback (most recent call last):
+  File "/home/548/eh6215/python/BARPA_evaluation/emma/ilamb/prep_era5.py", line 58, in <module>
+    prep_era5_for_ilamb(variables[i])
+NameError: name 'i' is not defined
+    prep_era5_for_ilamb(variables[i])
+    prep_era5_for_ilamb(variables[i])
+NameError: name 'i' is not defined
+    prep_era5_for_ilamb(variables[i])
+NameError: name 'i' is not defined
+    prep_era5_for_ilamb(variables[i])
+    prep_era5_for_ilamb(variables[i])
+NameError: name 'i' is not defined
+    prep_era5_for_ilamb(variables[i])
+    prep_era5_for_ilamb(variables[i])
+    prep_era5_for_ilamb(variables[i])
+NameError: name 'i' is not defined
+NameError: name 'i' is not defined
+NameError: name 'i' is not defined
+NameError: name 'i' is not defined
+    prep_era5_for_ilamb(variables[i])
+NameError: name 'i' is not defined
+NameError: name 'i' is not defined
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[58703,1],7]
+  Exit code:    1
+--------------------------------------------------------------------------

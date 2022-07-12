@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd /scratch/tp28/eh6215//ilamb/ILAMB_sample/MODELS
+
+
+for var in hurs  hus600  hus700  huss  omega500  psl  ta300  ta500  ta600  ta700  ta850  tasmean  ua200  ua300  ua500  ua850  va200  va300  va500  va850  zg300  zg500
+    do
+    #mkdir -p BARPA_ACCESS-CM2/$var/
+    #mkdir -p BARPA_ERA5/$var/
+    #ln -s /g/data/ia39/australian-climate-service/test-data/CORDEX-CMIP6/output/AUS-17i/BOM/CSIRO-BOM-ACCESS-CM2/historical/r4i1p1f1/BOM-BARPA-R/v1/mon/${var}/${var}_AUS-17i_CSIRO-BOM-ACCESS-CM2_historical_r4i1p1f1_BOM-BARPA-R_v1_mon_*.nc BARPA_ACCESS-CM2/$var/
+    ln -s /g/data/ia39/australian-climate-service/test-data/CORDEX-CMIP6/output/AUS-17i/BOM/ECMWF-ERA5/historical/r1/BOM-BARPA-R/v1/mon/${var}/${var}_AUS-17i_ECMWF-ERA5_historical_r1_BOM-BARPA-R_v1_mon_*.nc BARPA_ERA5/$var/
+    done
+
+
+for var in hurs   huss   psl  tasmean  
+    do
+    mkdir -p ACCESS-CM2/$var/
+#    ln -s /g/data/fs38/publications/CMIP6/CMIP/CSIRO-ARCCSS/ACCESS-CM2/historical/r4i1p1f1/Amon/${var}/gn/latest/${var}_Amon_ACCESS-CM2_historical_r4i1p1f1_gn_185001-201412.nc ACCESS-CM2/$var/
+    done 

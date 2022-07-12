@@ -1,6 +1,6 @@
 #!/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/bin/python
 
-#PBS -N job_ESM
+#PBS -N job_Nor
 #PBS -l walltime=04:00:00
 #PBS -q normal
 #PBS -P tp28
@@ -41,8 +41,8 @@ def load_aggregate(var,stream,path,yearmon,constraints,aggregators,name=None):
     
 def main(exp,year):
   files = []
-  path="/g/data/tp28/dev/barpa/prod/"+runs[exp][0]+"/"+exp
-  for mon in range(1,13):
+  path="/g/data/tp28/dev/barpa/trials/"+runs[exp][0]+"/"+exp
+  for mon in range(1,3):
     print(exp,year,mon)
     yearmon='%04d%02d01T0000Z'%(year,mon)
     try:
@@ -53,20 +53,28 @@ def main(exp,year):
     c_p2 = iris.Constraint(pressure=lambda p: p in [200,500,850])
     c_aus = iris.Constraint(longitude=lambda x: 110<=x<=155)
     c_t6 = iris.Constraint(time=lambda t:t.point.hour in [0,6,12,18])
-    for var,stream in [("av_prcp_rate","SLV1H"),("ttl_col_q","SLV1H"),("av_olr","SLV1H"),("mslp","SLV15M"),('temp_scrn','SLV15M')]:
+    for var,stream in [("av_prcp_rate","SLV1H"),("av_olr","SLV1H")]:#,("mslp","SLV15M"),("ttl_col_q","SLV1H"),('temp_scrn','SLV15M')]:
         files.append(load_aggregate(var,stream,path,yearmon,c_ntb,[('collapse','time',iris.analysis.MEAN)]))
-    for (name,agg) in [('_min',iris.analysis.MIN), ('_max',iris.analysis.MAX)]:
-        files.append(load_aggregate('temp_scrn','SLV15M',path,yearmon,c_ntb,[('aggregate','day',agg),('collapse','time',iris.analysis.MEAN)],name=name))
-    for var in ['wnd_ucmp','wnd_vcmp','spec_hum_uv']:
-        files.append(load_aggregate(var,'PRS3H',path,yearmon,c_ntb&c_p2,[('collapse','time',iris.analysis.MEAN)]))
+#    for (name,agg) in [('_min',iris.analysis.MIN), ('_max',iris.analysis.MAX)]:
+#        files.append(load_aggregate('temp_scrn','SLV15M',path,yearmon,c_ntb,[('aggregate','day',agg),('collapse','time',iris.analysis.MEAN)],name=name))
+#    for var in ['wnd_ucmp','wnd_vcmp','spec_hum_uv']:
+#        files.append(load_aggregate(var,'PRS3H',path,yearmon,c_ntb&c_p2,[('collapse','time',iris.analysis.MEAN)]))
 #    for var in ['wnd_ucmp','wnd_vcmp','omega_uv','air_temp_uv','spec_hum_uv']:
 #        files.append(load_aggregate(var,'PRS3H',path,yearmon,c_ntb,[('collapse',['time','longitude'],iris.analysis.MEAN)],name='_zm'))
 #    for var in ['wnd_ucmp','wnd_vcmp','omega_uv','air_temp_uv','spec_hum_uv']:
 #        files.append(load_aggregate(var,'PRS3H',path,yearmon,c_ntb&c_aus,[('collapse',['time','longitude'],iris.analysis.MEAN)],name='_au'))
   data = iris.load(files)
+  for cube in data:
+        if cube.var_name != 'ttl_col_q':
+            if cube.var_name[:9] == 'ttl_col_q':
+                cube.var_name = 'ttl_col_q'
+            else:
+                cube.var_name=None
+        cube.coord('time').var_name = None
+        cube.coord('forecast_period').var_name = None
   iris.util.equalise_attributes(data)
   data=data.merge()
-  iris.save(data,outpath+exp+"_sl_%04d.nc"%year,zlib=True)
+  iris.save(data,outpath+exp+"_p_%04d.nc"%year,zlib=True)
   for f in files:
     os.remove(f)
 
@@ -75,13 +83,14 @@ runs = {"cg282_ACCESS-CM2_historical_1960_sciB":('eh6215',1961,1971),
         "cg282_ACCESS-CM2_ssp370_2014_sciB":('eh6215',2015,2025),
         "cg282_ACCESS-ESM1-5_ssp370_2014_sciB":('cst565',2015,2019),
         "cg282_ERA5_historical_1979_sciB":('chs548',1980,1984),
-        "cg282_NorESM2-MM_ssp370_2014_sciB":('chs548',2015,2018)}
+        "cg282_NorESM2-MM_ssp370_2014_sciB":('chs548',2014,2018),
+        "cg282_norESM_debug":('chs548',2014,2015)}
 
 
 
 for i,exp in enumerate(runs):
-  if i==3:
+  if i==6:
     for year in range(runs[exp][1],runs[exp][2]):
-        if not os.path.exists(outpath+exp+"_sl_%04d.nc"%year):
+        if not os.path.exists(outpath+exp+"_p_%04d.nc"%year):
             main(exp,year)
 
