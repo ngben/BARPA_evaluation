@@ -1,6 +1,6 @@
 BARPA_evaluation scripts for sharing with ACS 
 
-Shared Data:
+Shared Data in gadi:/g/data/tp28/dev/barpa/share/data:
 
 
 Shared code:
