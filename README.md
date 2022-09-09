@@ -4,4 +4,4 @@ Shared Data:
 
 
 Shared code:
-emma/lib/load_iris.py: this code is for reading CMIP6 () and BARPA data (ia3)
+emma/lib/load_iris.py: this code is for reading CMIP6 () and BARPA data (ia39)
