@@ -9,6 +9,7 @@
   - NRM_subclusters.nc: NRM Subclusters on BARPA-R grid
   - BARPA-R_orography.nc
   - BARPA-R_landseamask.nc
+  - awap_masks.nc: Land sea mask and data quality mask (based on regions with zero rainfall for long period) on the AWAP grid.
 
 
 ## Shared Code:
