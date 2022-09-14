@@ -22,7 +22,7 @@ _DATA_ROOTDIR = '/g/data/r87/DRSv3/CMIP6'
 _DEFAULT_MIP = 'ScenarioMIP'
 _HIST_MIP = 'CMIP'
 # _GCM_ENS has the originating-centre, realisation identifier, historical version, ssp version
-_GCM_ENS = {'ACCESS-CM2': ('CSIRO-ARCCSS', 'r4i1p1f1', 'v20210921', 'v20210921'),
+_GCM_ENS = {'ACCESS-CM2': ('CSIRO-ARCCSS', 'r4i1p1f1', 'v20210607', 'v20210921'),
             'ACCESS-ESM1-5': ('CSIRO', 'r6i1p1f1', 'v20200529', 'v20211213'),
             'EC-Earth3': ('EC-Earth-Consortium', 'r1i1p1f1', 'v20200310', 'v20200310')}
 
@@ -148,6 +148,7 @@ def choose_directory(gcm, scenario, datadirs):
         
     for datadir in datadirs:
         b = os.path.basename(datadir)
+        #print("b={:}, version={:}".format(b, version))
         if b == version:
             return datadir
         
@@ -285,7 +286,9 @@ def get_cmip6(gcm, scenario, freq, var,
     iris.Cubes or xarray.Dataset
         Extracted data
     """
+    global _VERBOSE 
     _VERBOSE = verbose 
+    
     files = get_cmip6_files(gcm, scenario, freq, var, trange=trange, rootdir=rootdir, ens=ens)
     print_msg("Found {:} files".format(len(files)))
     [print_msg(os.path.basename(f)) for f in files]

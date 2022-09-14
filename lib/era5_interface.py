@@ -92,7 +92,7 @@ def get_era5(stream, freq, variable,
              save=None, as_iris=True,
              verbose=True):
     """
-    Returns ERA5 data as iris data cubes.
+    Returns ERA5 data as iris data cubes or xarray.Dataset
     
     Parameters
     ----------
@@ -117,7 +117,7 @@ def get_era5(stream, freq, variable,
         
     Returns
     -------
-    iris.Cubes
+    iris.Cubes or xarray.Dataset
         Extracted data
     """
     global _VERBOSE 
