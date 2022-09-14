@@ -100,7 +100,7 @@ def xclim_for_gpcc(indicator, years, res="g10", outpath=None, outname=None):
     years: year range to apply indicator to
     res: resolution, either g10, g05, g25, etc
     outpath: directory to save output to, or none if output is not to be written
-    outname: output file name. If none, name is constructed to be consistent with agcd labelling
+    outname: output file name. If none, name is constructed to be consistent with gpcc labelling
     """
     metric = indicator.identifier
     var = 'precip'
@@ -140,7 +140,7 @@ def xclim_for_cmip6(gcm, indicator, var, scen, years, outpath=None, outname=None
     scen: CMIP experiment. Can be evaluation, historical, ssp126, ssp370
     years: year range to apply indicator to
     outpath: directory to save output to, or none if output is not to be written
-    outname: output file name. If none, name is constructed to be consistent with agcd labelling
+    outname: output file name. If none, name is constructed to be consistent with cmip6 labelling
     """
     metric = indicator.identifier
     if type(years) == int:
@@ -173,10 +173,12 @@ def xclim_for_cmip6(gcm, indicator, var, scen, years, outpath=None, outname=None
 def xclim_for_era5(indicator, stream, var, operation, years, outpath=None, outname=None):
     """
     indicator: xclim indicator: e.g. xclim.indicators.icclim.RX1day
+    stream: single-levels or pressure-levels
     var: variable name
+    operation: xarray operation as a str, e.g., "resample(time="1D").sum()"
     years: year range to apply indicator to
     outpath: directory to save output to, or none if output is not to be written
-    outname: output file name. If none, name is constructed to be consistent with agcd labelling
+    outname: output file name. If none, name is constructed to be consistent with era5 labelling
     """
     metric = indicator.identifier
     if type(years) == int:
