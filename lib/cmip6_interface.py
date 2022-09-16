@@ -141,6 +141,10 @@ def choose_directory(gcm, scenario, datadirs):
     if len(datadirs) == 1:
         return datadirs[0]
     
+    datadirs_v = [datadir for datadir in datadirs if datadir.split('/')[-1][0] == 'v']
+    if len(datadirs_v) == 1:
+        return datadirs[0]
+    
     index = 2 if scenario == 'historical' else 3
     version = _GCM_ENS[gcm][index]
     if version is None:
@@ -185,7 +189,7 @@ def get_cmip6_files(gcm, scenario, freq, var, trange=(None, None), rootdir=None,
     assert gcm in _GCM_ENS.keys(), "Unknown gcm. Need to update _GCM_ENS"
     mip = _HIST_MIP if scenario == 'historical' else _DEFAULT_MIP
     
-    assert freq in ['15min', '1hr' , '3hr', '6hr', 'day', 'mon'], "Unknown freq"
+    assert freq in ['15min', '1hr' , '3hr', '6hr', 'day', 'Amon'], "Unknown freq"
     
     if rootdir is None:
         rootdir = _DATA_ROOTDIR
@@ -334,7 +338,7 @@ def get_cmip6(gcm, scenario, freq, var,
         #ds.coords['longitude'] = (ds.coords['longitude'] + 360) % 360
         #ds = ds.sortby(ds.longitude)
         #ds = ds.sortby(ds.latitude)
-        out = ds.sel(time=slice(tstart, tend), latitude=slice(latmin, latmax), longitude=slice(lonmin, lonmax))
+        out = ds.sel(time=slice(tstart, tend), lat=slice(latmin, latmax), lon=slice(lonmin, lonmax))
     
         if save is not None:
             out.to_netcdf(save)
