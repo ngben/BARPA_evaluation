@@ -247,3 +247,16 @@ def get_gpcc(freq, res,
         print_msg("Saving to {:}".format(save))
         
     return out
+
+def get_masks():
+    """
+    Return a data-presence mask on GPCC g10 grid.
+    
+    Returns
+    -------
+    xarray.dataset
+        Extracted data
+    """
+    ds = xr.open_dataset("/g/data/tp28/dev/evaluation_datasets/gpcc_mask.nc")
+    
+    return ds

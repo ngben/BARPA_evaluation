@@ -238,6 +238,14 @@ def get_agcd(freq, var,
     return out
 
 def get_masks():
+    """
+    Return a land-sea mask and a data quality mask on AGCD grid.
+    
+    Returns
+    -------
+    xarray.dataset
+        Extracted data
+    """
     ds = xr.open_dataset("/g/data/tp28/dev/evaluation_datasets/awap_mask.nc")
     
     return ds

@@ -12,6 +12,12 @@ Compute monthly xclim indices from daily BARPA, AGCD, CMIP6 and GPCC data, and h
 """
 
 
+def get_name(indicator):
+    if 'identifier' in dir(indicator):
+        return indicator.identifier
+    else:
+        return indicator.__name__
+    
 def xclim_for_agcd(indicator, var, agg, years, outpath=None, outname=None):
     """
     indicator: xclim indicator: e.g. xclim.indicators.icclim.RX1day
@@ -22,7 +28,7 @@ def xclim_for_agcd(indicator, var, agg, years, outpath=None, outname=None):
     outname: output file name. If none, name is constructed to be consistent with agcd labelling
     """
     agcdpath = "/g/data/zv2/agcd/v1/{var}/{agg}/r005/01day/agcd_v1_{var}_{agg}_r005_daily_{year}.nc"
-    metric = indicator.identifier
+    metric = get_name(indicator)
     
     if type(years) == int:
         years = [years]
@@ -61,7 +67,7 @@ def xclim_for_barpa(gcm, indicator, var, scen, years, outpath=None, outname=None
     outpath: directory to save output to, or none if output is not to be written
     outname: output file name. If none, name is constructed to be consistent with drs labelling
     """
-    metric = indicator.identifier
+    metric = get_name(indicator)
     if type(years) == int:
         years = [years]
         
@@ -102,7 +108,7 @@ def xclim_for_gpcc(indicator, years, res="g10", outpath=None, outname=None):
     outpath: directory to save output to, or none if output is not to be written
     outname: output file name. If none, name is constructed to be consistent with gpcc labelling
     """
-    metric = indicator.identifier
+    metric = get_name(indicator)
     var = 'precip'
     version = "v2020"
     gpccpath = '/g/data/ia39/aus-ref-clim-data-nci/gpcc/data/full_data_daily_{version}/{res}/full_data_daily_{version}_{res0}_{year}.nc'
@@ -142,7 +148,7 @@ def xclim_for_cmip6(gcm, indicator, var, scen, years, outpath=None, outname=None
     outpath: directory to save output to, or none if output is not to be written
     outname: output file name. If none, name is constructed to be consistent with cmip6 labelling
     """
-    metric = indicator.identifier
+    metric = get_name(indicator)
     if type(years) == int:
         years = [years]
         
@@ -180,7 +186,7 @@ def xclim_for_era5(indicator, stream, var, operation, years, outpath=None, outna
     outpath: directory to save output to, or none if output is not to be written
     outname: output file name. If none, name is constructed to be consistent with era5 labelling
     """
-    metric = indicator.identifier
+    metric = get_name(indicator)
     if type(years) == int:
         years = [years]
         
