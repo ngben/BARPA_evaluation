@@ -12,7 +12,7 @@ import glob
 import calendar
 import numpy as np
 import cftime
-
+import xarray as xr
 #
 # Default paths
 #
@@ -287,7 +287,7 @@ def get_barpa(gcm, scenario, freq, var,
         print_msg("Returning as iris cubes")
     else:
         ds = xr.open_mfdataset(files)
-        out = ds.sel(time=slice(tstart, tend), latitude=slice(latmin, latmax), longitude=slice(lonmin, lonmax))
+        out = ds.sel(time=slice(tstart, tend), lat=slice(latmin, latmax), lon=slice(lonmin, lonmax))
     
         if save is not None:
             out.to_netcdf(save)

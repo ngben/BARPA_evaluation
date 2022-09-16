@@ -11,8 +11,7 @@ import numpy as np
 import xarray as xr
 import glob
 
-subversion = "total"
-_DATA_ROOTDIR = '/g/data/zv2/agcd/v1/{var}/%s/r005/{freq}' % subversion
+_DATA_ROOTDIR = '/g/data/zv2/agcd/v1/{var}/{subversion}/r005/{freq}' 
 _FILENAME = "agcd_v1_{var}_*_r005_*.nc"
 _VERBOSE = False
 
@@ -139,16 +138,18 @@ def screen_files(files, freq="monthly", trange=(None, None)):
     
     return files_filt
 
-def get_files(freq, var, trange=(None, None)):
+def get_files(freq, var, subversion='total', trange=(None, None)):
     """
     Returns all the matching files.
 
     Parameters
     ----------
     freq: str
-        Either daily or monthly per /g/data/zv2/agcd/v1/{var}/total/r005/01month
+        Either daily or monthly per /g/data/zv2/agcd/v1/{var}/{subversion}/r005/01month
     var: str
         Variable name as per /g/data/zv2/agcd/v1/{var}
+    subversion: str
+        Algorithm label, e.g. total for precipitation and means for temperatures
     trange: tuple or an array of datetime objects (optional)
         Time range
         
@@ -166,7 +167,7 @@ def get_files(freq, var, trange=(None, None)):
     else:
         freq = "01month"
         
-    datadir = _DATA_ROOTDIR.format(freq=freq, var=var)
+    datadir = _DATA_ROOTDIR.format(freq=freq, var=var, subversion=subversion)
     print_msg("Looking at files in {:}".format(datadir))
     
     bn = _FILENAME.format(var=var)
@@ -180,7 +181,7 @@ def get_files(freq, var, trange=(None, None)):
     
     return files
 
-def get_agcd(freq, var, 
+def get_agcd(freq, var, subversion='total',
              trange=(None, None), latrange=(None, None), lonrange=(None, None), 
              save=None, 
              verbose=True):
@@ -212,7 +213,7 @@ def get_agcd(freq, var,
     global _VERBOSE
     _VERBOSE = verbose 
     
-    files = get_files(freq, var, trange=trange)
+    files = get_files(freq, var, subversion=subversion, trange=trange)
     print_msg("Found {:} files".format(len(files)))
     [print_msg(os.path.basename(f)) for f in files]
     
